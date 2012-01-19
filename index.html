@@ -2,14 +2,23 @@
 <script>
   var socket = io.connect('http://localhost');
 
+  var isReady = false;
 
   function send_message(text) {
-    return socket.emit('message', text)
+    if (isReady) {
+      socket.emit('message', text);
+    } else {
+      console.error("chat is not ready yet, please set your nickname");
+    }
   }
 
   function set_nickname(name) {
-    return socket.emit('set nickname', name);
+    socket.emit('set nickname', name);
   }
+
+  socket.on('ready', function() {
+    isReady = true;
+  });
 
   socket.on('message', function(message) {
     console.log(message); 
