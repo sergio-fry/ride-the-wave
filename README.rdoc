@@ -1,0 +1,15 @@
+== Ride The Wave
+
+NodeJS chat system
+
+== Installation
+
+* install node v0.6.7
+* run "npm install" inside project to get dependencies
+
+== Run
+
+Start server on port 3000:
+  node server.js
+
+Open in you browser http://localhost:3000/
