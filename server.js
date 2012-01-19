@@ -10,7 +10,13 @@ app.get('/', function (req, res) {
 });
 
 io.sockets.on('connection', function (socket) {
-  socket.on('message', function(data) {
-    socket.broadcast.emit('message', data); // send message to all other clients
+  socket.on('set nickname', function (name) {
+    socket.set('nickname', name, function () { socket.emit('ready'); });
+  });
+
+  socket.on('message', function(message) {
+    socket.get('nickname', function (err, name) {
+      socket.broadcast.emit('message', name + ':' +message); // send message to all other clients
+    });
   });
 });

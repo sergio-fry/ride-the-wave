@@ -2,11 +2,16 @@
 <script>
   var socket = io.connect('http://localhost');
 
+
   function send_message(text) {
-    socket.emit('message', { "text": text })
+    return socket.emit('message', text)
   }
 
-  socket.on('message', function(data) {
-    console.log(data) 
+  function set_nickname(name) {
+    return socket.emit('set nickname', name);
+  }
+
+  socket.on('message', function(message) {
+    console.log(message); 
   });
 </script>
