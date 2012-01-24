@@ -4,6 +4,7 @@
   "dependencies": {
     "express": "2.5.6",
     "expresso": "0.9.2", 
-    "socket.io" : "0.8.7"
+    "mongodb": "0.9.8-3",
+    "socket.io": "0.8.7"
   }
 }
