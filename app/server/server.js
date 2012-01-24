@@ -1,13 +1,22 @@
 // TODO: нужно использовать volatile для гарантированной доставки
 
-var app = require('express').createServer()
+var express = require('express')
+  , app = express.createServer()
   , io = require('socket.io').listen(app);
 
 app.listen(3000);
 
-app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+app.configure(function(){
+  app.use(express.static(__dirname + '/../client'));
 });
+
+app.get('/', function(req, res) {
+  res.sendfile('/index.html');
+});
+
+//app.get('/', function (req, res) {
+  //res.sendfile(__dirname + '../client/index.html');
+//});
 
 var messages = [];
 
