@@ -9,12 +9,7 @@ module.exports = {
     var messages_store = new MessagesStore();
 
     messages_store.messages(function(messages) {
-      console.log("db");
-      //assert.equal(messages.length, 0);
+      assert.equal(messages.length, 0);
     });
-
-    //this.on('exit', function() {
-      //assert.equal(2, n, 'Ensure both timeouts are called');
-    //});
   }
 };

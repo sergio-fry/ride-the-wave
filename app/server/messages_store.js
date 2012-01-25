@@ -15,9 +15,18 @@ var MessagesStore = function() {
 }
 
 MessagesStore.prototype.messages = function(callback) {
-  this.db.open(function(err, db) {
-    console.log("db");
-    callback([]);
+  this.db.open(function(error, db) {
+    if (error) throw error;
+
+    db.collection('messages', function(err, collection) {
+      collection.find({}, function(err, cursor) {
+        cursor.toArray(function(err, messages) {
+          callback(messages);
+
+          db.close();
+        });
+      });
+    });
   });
 }
 
