@@ -1,15 +1,18 @@
 // TODO: нужно использовать volatile для гарантированной доставки
 
-var app = require('express').createServer()
+var express = require('express')
+  , app = require('express').createServer()
   , io = require('socket.io').listen(app);
 
 var MessagesStore = require('./messages_store').MessagesStore;
 
 app.listen(3000);
+app.configure(function(){
+  app.use(express.static(__dirname + '/../client'));
+});
 
 app.get('/', function (req, res) {
-  console.log(__dirname);
-  res.sendfile(__dirname + '/../client/index.html');
+  res.sendfile('/index.html');
 });
 
 var messages_store = new MessagesStore();
@@ -21,13 +24,16 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('message', function(message) {
     socket.get('nickname', function (err, name) {
-      messages_store.insert_message(name + ':' + message);
-      socket.broadcast.emit('message', messages[messages.length - 1]); // send message to all other clients
+      messages_store.insert_message(name + ':' + message, function() {
+        socket.broadcast.emit('message', name + ':' + message); // send message to all other clients
+      });
     });
   });
 
   // send history to a just connected user
-  for(var i=0; i<messages.length; i++) {
-    socket.emit('message', messages[i]);
-  }
+  messages_store.messages(function(messages) {
+    for(var i=0; i<messages.length; i++) {
+      socket.emit('message', messages[i].body);
+    }
+  });
 });

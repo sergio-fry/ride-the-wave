@@ -1,5 +1,8 @@
+<html>
+  <head>
+<script src="/javascripts/jquery-1.7.1.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script>
+<script type="text/javascript">
   var socket = io.connect('http://localhost');
 
   var isReady = false;
@@ -21,6 +24,17 @@
   });
 
   socket.on('message', function(message) {
-    console.log(message); 
+    console.log(message);
   });
+
+  $(function() {
+    $("h1").hide();
+    //$("h1").fadeIn(2000);
+  });
+
 </script>
+  </head>
+  <body>
+    <h1>Hello world</h1>
+  </body>
+</html>
