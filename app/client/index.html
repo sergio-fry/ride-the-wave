@@ -12,7 +12,7 @@
     </style>
 <script type="text/javascript">
   // Socket implementation
-  var socket = io.connect('http://192.168.215.240');
+  var socket = io.connect('http://localhost');
   var isReady = false;
   var current_name = "";
 
@@ -40,7 +40,7 @@
   // End socket implementation
 
   function add_chat_line(text) {
-    $(".chat_room").prepend('<div class="chat_line">' + text + '</div>');
+    $('<div class="chat_line"></div>').text(text).prependTo(".chat_room");
   }
 
   $(function() {
