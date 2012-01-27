@@ -1,15 +1,25 @@
 <html>
   <head>
-<script src="/javascripts/jquery-1.7.1.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript">
-  var socket = io.connect('http://localhost');
+    <link type="text/css" href="stylesheets/ui-lightness/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    <link type="text/css" href="stylesheets/style.css" rel="stylesheet" />
+    <script type="text/javascript" src="javascripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery-ui-1.8.17.custom.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style type="text/css">
 
+
+      
+    </style>
+<script type="text/javascript">
+  // Socket implementation
+  var socket = io.connect('http://192.168.215.240');
   var isReady = false;
+  var current_name = "";
 
   function send_message(text) {
     if (isReady) {
       socket.emit('message', text);
+      add_chat_line(current_name + ':' + text);
     } else {
       console.error("chat is not ready yet, please set your nickname");
     }
@@ -17,6 +27,7 @@
 
   function set_nickname(name) {
     socket.emit('set nickname', name);
+    current_name = name;
   }
 
   socket.on('ready', function() {
@@ -24,17 +35,114 @@
   });
 
   socket.on('message', function(message) {
-    console.log(message);
+    add_chat_line(message);
   });
+  // End socket implementation
+
+  function add_chat_line(text) {
+    $(".chat_room").prepend('<div class="chat_line">' + text + '</div>');
+  }
 
   $(function() {
-    $("h1").hide();
-    //$("h1").fadeIn(2000);
-  });
+    var name = $("#name"),
+      tips = $('.validateTips');
 
+    function updateTips( t ) {
+      tips
+        .text( t )
+        .addClass( "ui-state-highlight" );
+      setTimeout(function() {
+        tips.removeClass( "ui-state-highlight", 1500 );
+      }, 500 );
+    }
+
+    function checkLength( o, n, min, max ) {
+      if ( o.val().length > max || o.val().length < min ) {
+        o.addClass( "ui-state-error" );
+        updateTips( "Length of " + n + " must be between " +
+          min + " and " + max + "." );
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function checkRegexp( o, regexp, n ) {
+      if ( !( regexp.test( o.val() ) ) ) {
+        o.addClass( "ui-state-error" );
+        updateTips( n );
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    $("#nick_name").on('submit', function(e) {
+      e.preventDefault();
+    });
+    
+    $("#name_form").dialog({
+			autoOpen: true,
+      closeOnEscape: false,
+			height: 230,
+			width: 350,
+			modal: true,
+      resizable: false,
+			buttons: {
+				"Enter": function() {
+					var bValid = true;
+					name.removeClass( "ui-state-error" );
+
+					bValid = bValid && checkLength( name, "username", 3, 16 );
+					bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
+
+					if (bValid) {
+						set_nickname(name.val());
+						$(this).dialog( "close" );
+					}
+				}
+			}
+		});
+
+    $('#message_input').keypress(function(e) {
+      if (e.which == 13) {
+        message = $("#message_input").val();
+        if (message != "") send_message(message);
+        $("#message_input").val("");
+      }
+    });
+
+    $("#send_message").click(function(e) {
+      message = $("#message_input").val();
+      if (message != "") send_message(message);
+      $("#message_input").val("");
+    });
+  });
 </script>
-  </head>
-  <body>
-    <h1>Hello world</h1>
-  </body>
+</head>
+<body>
+<div id="name_form" title="Enter your name">
+  <p class="validateTips">All form fields are required.</p>
+  <form id="nick_name" action="/">
+    <fieldset>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" class="text ui-widget-content ui-corner-all" />
+    </fieldset>
+  </form>
+</div>
+
+<div align="center">
+  <div class="main_container">
+    <div class="message">
+      <input type="text" id="message_input" class="text ui-widget-content ui-corner-all" />
+      <button class="ui-state-default ui-corner-all" id="send_message">
+        <spen class="ui-icon ui-icon-arrowthick-1-s"></spen>
+      </button>
+    </div>
+    <div class="chat_room ui-widget ui-widget-content ui-corner-all" align="left">
+    </div>
+  </div>
+</div>
+
+</body>
 </html>

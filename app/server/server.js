@@ -1,7 +1,7 @@
 // TODO: нужно использовать volatile для гарантированной доставки
 
 var express = require('express')
-  , app = require('express').createServer()
+  , app = express.createServer()
   , io = require('socket.io').listen(app);
 
 var MessagesStore = require('./messages_store').MessagesStore;
