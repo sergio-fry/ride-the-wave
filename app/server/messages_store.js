@@ -9,21 +9,32 @@ var MessagesStore = function() {
 
   console.log("Connecting to " + host + ":" + port);
 
-  this.db = new Db('node-mongo-examples', new Server(host, port, {}));
-
-
+  this.db = new Db('ride-the-wave', new Server(host, port, {}));
 }
 
-MessagesStore.prototype.messages = function(callback) {
+MessagesStore.prototype.insert_message = function(message, callback) {
   this.db.open(function(error, db) {
     if (error) throw error;
 
     db.collection('messages', function(err, collection) {
+      collection.insert({'body': message}, function(docs) {
+        db.close();
+        callback(docs);
+      });
+    });
+  });
+}
+
+// fetch messages
+MessagesStore.prototype.messages = function(callback) {
+  this.db.open(function(err, db) {
+    if (err) throw err;
+
+    db.collection('messages', function(err, collection) {
       collection.find({}, function(err, cursor) {
         cursor.toArray(function(err, messages) {
-          callback(messages);
-
           db.close();
+          callback(messages);
         });
       });
     });
