@@ -22,10 +22,11 @@ io.sockets.on('connection', function (socket) {
     socket.set('nickname', name, function () { socket.emit('ready'); });
   });
 
-  socket.on('message', function(message) {
+  socket.on('message', function(message_body) {
     socket.get('nickname', function (err, name) {
-      messages_store.insert_message(name + ':' + message, function() {
-        socket.broadcast.emit('message', name + ':' + message); // send message to all other clients
+      var message = { "name": name, "body": message_body }
+      messages_store.insert_message(message, function() {
+        socket.broadcast.emit('message', message); // send message to all other clients
       });
     });
   });
@@ -33,7 +34,7 @@ io.sockets.on('connection', function (socket) {
   // send history to a just connected user
   messages_store.messages(function(messages) {
     for(var i=0; i<messages.length; i++) {
-      socket.emit('message', messages[i].body);
+      socket.emit('message', messages[i]);
     }
   });
 });

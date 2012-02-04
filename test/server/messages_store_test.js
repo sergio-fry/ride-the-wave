@@ -14,7 +14,7 @@ module.exports = {
 
   '#insert_messages': function(beforeExit, assert) {
     beforeEach(function(messages_store) {
-      messages_store.insert_message("dummy message", function(error) {
+      messages_store.insert_message({ "name": "Foo", "body": "dummy message" }, function(error) {
         messages_store.messages(function(messages) {
           assert.equal(messages.length, 1);
         });

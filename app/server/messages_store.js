@@ -30,7 +30,7 @@ MessagesStore.prototype.insert_message = function(message, callback) {
     if (error) throw error;
 
     db.collection('messages', function(err, collection) {
-      collection.insert({'body': message}, function(docs) {
+      collection.insert(message, function(docs) {
         db.close(function() {
           callback(docs);
         });
