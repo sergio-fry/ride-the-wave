@@ -10,6 +10,19 @@ var MessagesStore = function() {
   console.log("Connecting to " + host + ":" + port);
 
   this.db = new Db('ride-the-wave', new Server(host, port, {}));
+
+}
+
+MessagesStore.prototype.clear = function(callback) {
+  this.db.open(function(err, db) {
+    db.collection("messages", function(err, collection) {
+      collection.drop(function(err, collection) {
+        db.close(function() {
+          callback();
+        });
+      });
+    });
+  });
 }
 
 MessagesStore.prototype.insert_message = function(message, callback) {
@@ -18,8 +31,9 @@ MessagesStore.prototype.insert_message = function(message, callback) {
 
     db.collection('messages', function(err, collection) {
       collection.insert({'body': message}, function(docs) {
-        db.close();
-        callback(docs);
+        db.close(function() {
+          callback(docs);
+        });
       });
     });
   });
@@ -33,8 +47,9 @@ MessagesStore.prototype.messages = function(callback) {
     db.collection('messages', function(err, collection) {
       collection.find({}, function(err, cursor) {
         cursor.toArray(function(err, messages) {
-          db.close();
-          callback(messages);
+          db.close(function() {
+            callback(messages);
+          });
         });
       });
     });
