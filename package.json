@@ -2,6 +2,7 @@
   "name": "ride-the-wave",
   "version": "0.0.1",
   "dependencies": {
+    "async": "0.1.15",
     "express": "2.5.6",
     "expresso": "0.9.2", 
     "mongodb": "0.9.8-3",
