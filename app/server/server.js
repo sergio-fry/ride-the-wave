@@ -18,6 +18,12 @@ app.get('/', function (req, res) {
 
 var messages_store = new MessagesStore();
 
+// Force long pollingon heroku
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
+});
+
 io.sockets.on('connection', function (socket) {
   socket.on('set nickname', function (name) {
     socket.set('nickname', name, function () { socket.emit('ready'); });
