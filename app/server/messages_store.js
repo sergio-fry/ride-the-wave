@@ -4,13 +4,22 @@ var Db = require('mongodb').Db,
 
 
 var MessagesStore = function() {
-  var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
-  var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : Connection.DEFAULT_PORT;
+  mongolab_uri = "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
+  var mongolab_uri_parts = mongolab_uri.match(/mongodb:\/\/(.*):(.*)@(.*):(.*)\/(.*)/);
+  var user = mongolab_uri_parts[1];
+  var password = mongolab_uri_parts[2];
+  var host = mongolab_uri_parts[3];
+  var port = mongolab_uri_parts[4];
+  var path = mongolab_uri_parts[5];
 
-  console.log("Connecting to " + host + ":" + port);
+  //var host = mongolab_uri.match(/mongodb:\/\/(.*)/)[1]
 
-  this.db = new Db('ride-the-wave', new Server(host, port, {}));
+  //var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
+  //var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : Connection.DEFAULT_PORT;
 
+  //console.log("Connecting to " + mongolab_uri_parts);
+
+  this.db = new Db('ride-the-wave', new Server(host, port, {path: path, user:user, password:password}));
 }
 
 MessagesStore.prototype.clear = function(callback) {
