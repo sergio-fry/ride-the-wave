@@ -17,14 +17,23 @@ module.exports = {
 
   '#messages': function(beforeExit, assert) {
     beforeEach(function(messages_store) {
-      async.series([function() { // messages should be empty
+      async.series([function(callback) { // messages should be empty
         messages_store.messages(function(messages) {
           assert.equal(messages.length, 0);
+          callback();
         });
-      }, function() { // should be possible to insert message
+      }, function(callback) { // should be possible to insert message
         messages_store.insert_message({ "name": "Foo", "body": "dummy message" }, function(error) {
           messages_store.messages(function(messages) {
             assert.equal(messages.length, 1);
+          callback();
+          });
+        });
+      }, function(callback) { // it should add a timestamp
+        messages_store.insert_message({ "name": "Foo", "body": "dummy message" }, function(error) {
+          messages_store.messages(function(messages) {
+            assert.isDefined(messages[0].created_at);
+            callback();
           });
         });
       }]);
