@@ -6,7 +6,8 @@ var express = require('express')
 
 var MessagesStore = require('./messages_store').MessagesStore;
 
-app.listen(3000);
+var port = process.env.PORT || 3000;
+app.listen(port);
 app.configure(function(){
   app.use(express.static(__dirname + '/../client'));
 });
