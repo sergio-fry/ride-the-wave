@@ -29,7 +29,7 @@
     if (!window_focus && window.webkitNotifications) {
       if (window.webkitNotifications.checkPermission() == 0) { // 0 is PERMISSION_ALLOWED
         // function defined in step 2
-        window.webkitNotifications.createNotification(null, title, body);
+        window.webkitNotifications.createNotification('icon.png', title, body);
       } else {
         window.webkitNotifications.requestPermission();
       }
