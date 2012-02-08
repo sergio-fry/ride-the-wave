@@ -61,8 +61,11 @@ MessagesStore.prototype.messages = function(callback) {
     if (err) throw err;
 
     db.collection('messages', function(err, collection) {
+      if (err) throw err;
       collection.find({}, function(err, cursor) {
+        if (err) throw err;
         cursor.toArray(function(err, messages) {
+          if (err) throw err;
           db.close(function() {
             callback(messages);
           });
