@@ -19,7 +19,6 @@
   function send_message(text) {
     if (isReady) {
       socket.emit('message', text);
-      add_chat_line(current_name + ':' + text);
     } else {
       console.error("chat is not ready yet, please set your nickname");
     }

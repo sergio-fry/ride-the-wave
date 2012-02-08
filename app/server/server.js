@@ -1,16 +1,16 @@
 // TODO: нужно использовать volatile для гарантированной доставки
 
-var express = require('express')
-  , app = express.createServer()
+  var express = require('express')
+, app = express.createServer()
   , io = require('socket.io').listen(app);
 
-var MessagesStore = require('./messages_store').MessagesStore;
+  var MessagesStore = require('./messages_store').MessagesStore;
 
-var port = process.env.PORT || 3000;
-app.listen(port);
-app.configure(function(){
-  app.use(express.static(__dirname + '/../client'));
-});
+  var port = process.env.PORT || 3000;
+  app.listen(port);
+  app.configure(function(){
+    app.use(express.static(__dirname + '/../client'));
+  });
 
 app.get('/', function (req, res) {
   res.sendfile('/index.html');
@@ -18,11 +18,12 @@ app.get('/', function (req, res) {
 
 var messages_store = new MessagesStore();
 
-// Force long pollingon heroku
-io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
-});
+if(process.env.HEROKU == "yes") { // Force long pollingon heroku
+  io.configure(function () {
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 10);
+  });
+}
 
 io.sockets.on('connection', function (socket) {
   socket.on('set nickname', function (name) {
@@ -33,6 +34,7 @@ io.sockets.on('connection', function (socket) {
     socket.get('nickname', function (err, name) {
       var message = { "name": name, "body": message_body }
       messages_store.insert_message(message, function() {
+        socket.emit('message', message);
         socket.broadcast.emit('message', message); // send message to all other clients
       });
     });

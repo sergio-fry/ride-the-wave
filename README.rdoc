@@ -4,13 +4,18 @@ NodeJS chat system
 
 == Installation
 
-* install node v0.6.7
+* install node v0.4.x (heroku compatible)
+* install npm
 * run "npm install" inside project to get dependencies
+
+== Heroku
+* heroku config:add HEROKU=yes
+* install MongoHQ or MongLab addon
 
 == Run
 
 Start server on port 3000:
-  node server.js
+  node app/server/server.js
 
 Open in you browser http://localhost:3000/
 
@@ -19,9 +24,6 @@ Open in you browser http://localhost:3000/
 Run all tests:
   $ make test
 
-Also Guard script available to run only modified. Install gaurd with a bundler:
-  $ bundle install
-
-Start guard:
+Also Guard script available to run only modified. Install gaurd and run:
   $ guard
 
