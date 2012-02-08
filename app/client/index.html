@@ -17,8 +17,16 @@
   var current_name = "";
 
   
+  var window_focus;
+
+  $(window).focus(function() {
+      window_focus = true;
+  }).blur(function() {
+    window_focus = false;
+  });
+
   function send_html5_notification(title, body) {
-    if (window.webkitNotifications) {
+    if (!window_focus && window.webkitNotifications) {
       if (window.webkitNotifications.checkPermission() == 0) { // 0 is PERMISSION_ALLOWED
         // function defined in step 2
         window.webkitNotifications.createNotification(null, title, body);
