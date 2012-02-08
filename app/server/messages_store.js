@@ -2,36 +2,21 @@
 
 var Db = require('mongodb').Db,
   Connection = require('mongodb').Connection,
+  connect = require('mongodb').connect,
   Server = require('mongodb').Server;
 
+var mongo_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://heroku:04ea8ef544f3d2e0322c9e3f5e89c8a3@staff.mongohq.com:10086/app2782235" || Db.DEFAULT_URL;
 
 var MessagesStore = function() {
-  mongolab_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
-  var mongolab_uri_parts = mongolab_uri.match(/mongodb:\/\/(.*):(.*)@(.*):(.*)\/(.*)/);
-  var username = mongolab_uri_parts[1];
-  var password = mongolab_uri_parts[2];
-
-
-  var host = mongolab_uri_parts[3];
-  var port = parseInt(mongolab_uri_parts[4]);
-  var database = mongolab_uri_parts[5];
-
-  //var host = mongolab_uri.match(/mongodb:\/\/(.*)/)[1]
-
-  //var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
-  //var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : Connection.DEFAULT_PORT;
-
-  //console.log("Connecting to " + mongolab_uri_parts);
-
-  console.log(host, port);
-  //this.db = new Db(database, new Server(host, port, { username: username, password: password }));
-  this.db = new Db(database, new Server(host, port));
 }
 
 MessagesStore.prototype.clear = function(callback) {
-  this.db.open(function(err, db) {
+  connect(mongo_uri, function(err, db) {
+    if (err) console.log(err);
     db.collection("messages", function(err, collection) {
+      if (err) console.log(err);
       collection.drop(function(err, collection) {
+        if (err) console.log(err);
         db.close(function() {
           callback();
         });
@@ -41,10 +26,12 @@ MessagesStore.prototype.clear = function(callback) {
 }
 
 MessagesStore.prototype.insert_message = function(message, callback) {
-  this.db.open(function(error, db) {
-    if (error) throw error;
+  connect(mongo_uri, function(err, db) {
+    if (err) console.log(err);
 
     db.collection('messages', function(err, collection) {
+      if (err) console.log(err);
+
       message["created_at"] = new Date().getTime() / 1000;
       collection.insert(message, function(docs) {
         db.close(function() {
@@ -57,15 +44,15 @@ MessagesStore.prototype.insert_message = function(message, callback) {
 
 // fetch messages
 MessagesStore.prototype.messages = function(callback) {
-  this.db.open(function(err, db) {
-    if (err) throw err;
+  connect(mongo_uri, function(err, db) {
+    if (err) console.log(err);
 
     db.collection('messages', function(err, collection) {
-      if (err) throw err;
+      if (err) console.log(err);
       collection.find({}, function(err, cursor) {
-        if (err) throw err;
+        if (err) console.log(err);
         cursor.toArray(function(err, messages) {
-          if (err) throw err;
+          if (err) console.log(err);
           db.close(function() {
             callback(messages);
           });
