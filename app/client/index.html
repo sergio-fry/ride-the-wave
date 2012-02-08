@@ -16,6 +16,18 @@
   var isReady = false;
   var current_name = "";
 
+  
+  function send_html5_notification(title, body) {
+    if (window.webkitNotifications) {
+      if (window.webkitNotifications.checkPermission() == 0) { // 0 is PERMISSION_ALLOWED
+        // function defined in step 2
+        window.webkitNotifications.createNotification(null, title, body);
+      } else {
+        window.webkitNotifications.requestPermission();
+      }
+    }
+  }
+
   function send_message(text) {
     if (isReady) {
       socket.emit('message', text);
@@ -39,6 +51,7 @@
     }
 
     add_chat_line(format_date(new Date(message.created_at * 1000))+" "+message.name + ": " + message.body);
+    send_html5_notification(message.name, message.body);
   });
   // End socket implementation
 
