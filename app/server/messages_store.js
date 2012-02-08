@@ -5,9 +5,11 @@ var Db = require('mongodb').Db,
   connect = require('mongodb').connect,
   Server = require('mongodb').Server;
 
-var mongo_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://heroku:04ea8ef544f3d2e0322c9e3f5e89c8a3@staff.mongohq.com:10086/app2782235" || Db.DEFAULT_URL;
+//var mongo_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://ridethewave:ridethewave12345@ds029847.mongolab.com:29847/ride-the-wave";
+var mongo_uri = "mongodb://ridethewave:ridethewave12345@ds029847.mongolab.com:29847/ride-the-wave";
 
 var MessagesStore = function() {
+
 }
 
 MessagesStore.prototype.clear = function(callback) {
