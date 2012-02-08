@@ -1,13 +1,17 @@
+//TODO: If performance is critical for your app, we strongly recommend installing the optional bson_ext gem.
+
 var Db = require('mongodb').Db,
   Connection = require('mongodb').Connection,
   Server = require('mongodb').Server;
 
 
 var MessagesStore = function() {
-  mongolab_uri = "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
+  mongolab_uri = process.env.MONGOLAB_URI || "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
   var mongolab_uri_parts = mongolab_uri.match(/mongodb:\/\/(.*):(.*)@(.*):(.*)\/(.*)/);
   var username = mongolab_uri_parts[1];
   var password = mongolab_uri_parts[2];
+
+
   var host = mongolab_uri_parts[3];
   var port = parseInt(mongolab_uri_parts[4]);
   var database = mongolab_uri_parts[5];

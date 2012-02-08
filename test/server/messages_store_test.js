@@ -26,7 +26,7 @@ module.exports = {
         messages_store.insert_message({ "name": "Foo", "body": "dummy message" }, function(error) {
           messages_store.messages(function(messages) {
             assert.equal(messages.length, 1);
-          callback();
+            callback();
           });
         });
       }, function(callback) { // it should add a timestamp
