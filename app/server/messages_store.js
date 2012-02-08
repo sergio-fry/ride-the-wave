@@ -6,7 +6,7 @@ var Db = require('mongodb').Db,
 
 
 var MessagesStore = function() {
-  mongolab_uri = process.env.MONGOLAB_URI || "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
+  mongolab_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
   var mongolab_uri_parts = mongolab_uri.match(/mongodb:\/\/(.*):(.*)@(.*):(.*)\/(.*)/);
   var username = mongolab_uri_parts[1];
   var password = mongolab_uri_parts[2];
