@@ -41,7 +41,7 @@ MessagesStore.prototype.insert_message = function(message, callback) {
     if (error) throw error;
 
     db.collection('messages', function(err, collection) {
-      // TODO: created_at = new Date().getTime() / 1000
+      message["created_at"] = new Date().getTime() / 1000;
       collection.insert(message, function(docs) {
         db.close(function() {
           callback(docs);
