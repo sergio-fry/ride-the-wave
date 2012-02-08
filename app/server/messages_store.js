@@ -6,11 +6,11 @@ var Db = require('mongodb').Db,
 var MessagesStore = function() {
   mongolab_uri = "mongodb://heroku_app2782235:tjjf44se0h9rhp6t3v4n4ppcrj@ds029837.mongolab.com:29837/heroku_app2782235";
   var mongolab_uri_parts = mongolab_uri.match(/mongodb:\/\/(.*):(.*)@(.*):(.*)\/(.*)/);
-  var user = mongolab_uri_parts[1];
+  var username = mongolab_uri_parts[1];
   var password = mongolab_uri_parts[2];
   var host = mongolab_uri_parts[3];
-  var port = mongolab_uri_parts[4];
-  var path = mongolab_uri_parts[5];
+  var port = parseInt(mongolab_uri_parts[4]);
+  var database = mongolab_uri_parts[5];
 
   //var host = mongolab_uri.match(/mongodb:\/\/(.*)/)[1]
 
@@ -19,7 +19,9 @@ var MessagesStore = function() {
 
   //console.log("Connecting to " + mongolab_uri_parts);
 
-  this.db = new Db('ride-the-wave', new Server(host, port, {path: path, user:user, password:password}));
+  console.log(host, port);
+  //this.db = new Db(database, new Server(host, port, { username: username, password: password }));
+  this.db = new Db(database, new Server(host, port));
 }
 
 MessagesStore.prototype.clear = function(callback) {
