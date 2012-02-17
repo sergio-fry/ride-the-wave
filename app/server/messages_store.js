@@ -5,14 +5,24 @@ var Db = require('mongodb').Db,
     connect = require('mongodb').connect,
     Server = require('mongodb').Server;
 
-var mongo_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || "mongodb://ridethewave:ridethewave12345@ds029817.mongolab.com:29817/ride-the-wave-test";
+var mongo_uri = process.env.MONGOHQ_URL || process.env.MONGOLAB_URI;
 
 var MessagesStore = function() {
 
 }
+MessagesStore.prototype._connect = function(callback) {
+  if(mongo_uri != undefined) {
+    connect(mongo_uri, callback);
+  } else {
+
+    console.log(Connection.DEFAULT_PORT);
+    var db = new Db('ride-the-wave-test1', new Server("localhost", Connection.DEFAULT_PORT, {}));
+    db.open(callback);
+  }
+}
 
 MessagesStore.prototype.clear = function(callback) {
-  connect(mongo_uri, function(err, db) {
+  this._connect(function(err, db) {
     if (err) throw err;
     db.collection("messages", function(err, collection) {
       if (err) throw err;
@@ -27,7 +37,7 @@ MessagesStore.prototype.clear = function(callback) {
 }
 
 MessagesStore.prototype.insert_message = function(message, callback) {
-  connect(mongo_uri, function(err, db) {
+  this._connect(function(err, db) {
     if (err) throw err;
 
     db.collection('messages', function(err, collection) {
@@ -45,7 +55,7 @@ MessagesStore.prototype.insert_message = function(message, callback) {
 
 // fetch messages
 MessagesStore.prototype.messages = function(callback) {
-  connect(mongo_uri, function(err, db) {
+  this._connect(function(err, db) {
     if (err) throw err;
 
     db.collection('messages', function(err, collection) {
